@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -19,9 +20,10 @@ public class AddReminder extends AppCompatActivity {
 
 
     final int PLACE_PICKER_REQUEST = 1;
-    SharedPreferences sharedPreferences;
+    //SharedPreferences sharedPreferences;
     Double latitude,longitude;
     String place_name="";
+    TextView locationTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,9 @@ public class AddReminder extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sharedPreferences = getSharedPreferences("pranit",MODE_PRIVATE);
+        locationTv = (TextView)findViewById(R.id.location_text);
+
+        //sharedPreferences = getSharedPreferences("pranit",MODE_PRIVATE);
 
         findViewById(R.id.select_location).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,17 +66,19 @@ public class AddReminder extends AppCompatActivity {
                 DatabaseManager databaseManager = new DatabaseManager(AddReminder.this);
 
                 ScheduleModel model = new ScheduleModel();
-                model.setLatitude(String.valueOf(latitude));
-                model.setLongitude(String.valueOf(longitude));
+                model.setLatitude(latitude);
+                model.setLongitude(longitude);
                 model.setPlace_name(place_name);
 
                 // --- TEMPORARY ----
+                /*
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.putString("latitude",String.valueOf(latitude));
                 editor.putString("longitude",String.valueOf(longitude));
 
                 editor.apply();
+                */
 
                 if (databaseManager.addSchedule(model))
                     finish();
@@ -98,18 +104,8 @@ public class AddReminder extends AppCompatActivity {
                 longitude = place.getLatLng().longitude;
                 place_name = String.format("%s",place.getName());
 
-                /*
+                locationTv.setText(place_name);
 
-                // --- TEMPORARY ----
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putString("latitude",String.valueOf(latitude));
-                editor.putString("longitude",String.valueOf(longitude));
-
-                editor.apply();
-                //
-
-                */
 
                 Log.d("Selected Latitude",""+latitude);
                 Log.d("Selected Longitude",""+longitude);

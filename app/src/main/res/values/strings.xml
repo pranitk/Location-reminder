@@ -5,4 +5,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="notification_text">Your action will be performed now! Hurray!</string>
     <string name="notification_title">You are near</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Click to add</string>
 </resources>

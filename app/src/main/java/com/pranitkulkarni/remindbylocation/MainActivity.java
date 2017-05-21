@@ -6,20 +6,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.pranitkulkarni.remindbylocation.fragments.FragmentDashboard;
+import com.pranitkulkarni.remindbylocation.fragments.FragmentHome;
+import com.pranitkulkarni.remindbylocation.fragments.FragmentSettings;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -27,14 +23,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentHome()).commit();
                     return true;
+
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentDashboard()).commit();
                     return true;
+
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentSettings()).commit();
                     return true;
             }
             return false;
@@ -46,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+        getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentHome()).commit();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MainActivity.this,AddReminder.class));
+
 
             }
         });

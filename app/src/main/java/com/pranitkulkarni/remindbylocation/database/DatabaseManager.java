@@ -78,6 +78,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 
+    // Optimize this...
     public List<ScheduleModel> getLocationsToBeSearched(Location currentLocation){
 
         ArrayList<ScheduleModel> reminders = new ArrayList<>();
@@ -101,6 +102,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLatitude(location.getLatitude());
                 model.setLongitude(location.getLongitude());
 
+                Log.d("Reminder "+model.getId()," at "+model.getPlace_name());
+
                 Float distance = currentLocation.distanceTo(location);
                 if (distance < 100){    // Check if it's nearby..
 
@@ -121,5 +124,40 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return reminders;
     }
 
+    public List<ScheduleModel> getAllSchedules(){
+
+        ArrayList<ScheduleModel> reminders = new ArrayList<>();
+
+        try {
+
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME;
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery(query,null);
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+
+
+                ScheduleModel model = new ScheduleModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ID)));
+                model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
+                model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
+                model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
+
+                reminders.add(model);
+
+
+            }
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return reminders;
+
+    }
 
 }

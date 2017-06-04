@@ -6,10 +6,11 @@ package com.pranitkulkarni.remindbylocation.database;
 
 public class ScheduleModel {
 
-    private int id = 0;
-    private String label = "",place_name="";
+    private int id = 0,action_id=0,action_type=0;
+    private String label = "",place_name="",created_at="";
     private Double longitude,latitude;
     private Boolean isCompleted = false;
+    private MessagesModel messagesModel;
 
     public void setId(int id) {
         this.id = id;
@@ -27,6 +28,23 @@ public class ScheduleModel {
         this.place_name = place_name;
     }
 
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public void setAction_id(int action_id) {
+        this.action_id = action_id;
+    }
+
+    public void setAction_type(int action_type) {
+        this.action_type = action_type;
+    }
+
+    public void setMessagesModel(MessagesModel messagesModel) {
+        this.messagesModel = messagesModel;
+    }
+
+    ///
 
     public int getId() {
         return id;
@@ -52,5 +70,21 @@ public class ScheduleModel {
 
     public Boolean getCompleted() {
         return isCompleted;
+    }
+
+    public int getAction_id() {
+        return action_id;
+    }
+
+    public int getAction_type() {
+        return action_type;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public MessagesModel getMessagesModel() {
+        return messagesModel;
     }
 }

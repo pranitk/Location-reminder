@@ -36,12 +36,29 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     DatabaseInfo.Schedules.LATITUDE + " DOUBLE, "+
                     DatabaseInfo.Schedules.LONGITUDE + " DOUBLE, "+
                     DatabaseInfo.Schedules.PLACE_NAME + " TEXT, "+
-                    DatabaseInfo.Schedules.IS_COMPLETED + " BOOLEAN "+ ")";
+                    DatabaseInfo.Schedules.IS_NOTIFIED + " BOOLEAN, "+
+                    DatabaseInfo.Schedules.ACTION_ID + " INTEGER, "+
+                    DatabaseInfo.Schedules.ACTION_TYPE + " INTEGER, "+
+                    DatabaseInfo.Schedules.CREATED_AT + " TEXT, "+
+                    DatabaseInfo.Schedules.NEEDS_CONFIRMATION + " BOOLEAN, "+
+                    DatabaseInfo.Schedules.IS_COMPLETED + " BOOLEAN "+
+                    "FOREIGN KEY ("+ DatabaseInfo.Schedules.ACTION_ID+") REFERENCES "+ DatabaseInfo.Messages.TABLE_NAME + " ("+ DatabaseInfo.Messages.ID+"))";
+
+    private static final String CREATE_MESSAGES_TABLE =
+            "CREATE TABLE "+ DatabaseInfo.Messages.TABLE_NAME +
+                    " ( " + DatabaseInfo.Messages.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                    DatabaseInfo.Messages.MESSAGE + " TEXT, "+
+                    DatabaseInfo.Messages.CONTACT_NAME + " TEXT, "+
+                    DatabaseInfo.Messages.CONTACT_NUMBER + " INTEGER, "+
+                    DatabaseInfo.Messages.SCHEDULE_ID + " INTEGER, "+
+                    DatabaseInfo.Messages.SENT_AT+" TEXT, "+
+                    "FOREIGN KEY ("+ DatabaseInfo.Messages.SCHEDULE_ID+") REFERENCES "+ DatabaseInfo.Schedules.TABLE_NAME + " (" + DatabaseInfo.Schedules.ID + "))";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(CREATE_SCHEDULE_TABLE);
+        db.execSQL(CREATE_MESSAGES_TABLE);
     }
 
     @Override
@@ -61,8 +78,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
             contentValues.put(DatabaseInfo.Schedules.LATITUDE,model.getLatitude());
             contentValues.put(DatabaseInfo.Schedules.LONGITUDE,model.getLongitude());
             contentValues.put(DatabaseInfo.Schedules.PLACE_NAME,model.getPlace_name());
+            contentValues.put(DatabaseInfo.Schedules.IS_NOTIFIED,false);
+            contentValues.put(DatabaseInfo.Schedules.IS_COMPLETED,false);
+            contentValues.put(DatabaseInfo.Schedules.LABEL,model.getLabel());
+            contentValues.put(DatabaseInfo.Schedules.CREATED_AT,model.getCreated_at());
+            contentValues.put(DatabaseInfo.Schedules.ACTION_TYPE,model.getAction_type());
 
-            database.insert(DatabaseInfo.Schedules.TABLE_NAME,null,contentValues);
+            int id = (int)database.insert(DatabaseInfo.Schedules.TABLE_NAME,null,contentValues);
+
+            if (model.getAction_type() == 1)    // Send SMS
+            {
+                MessagesModel messagesModel = model.getMessagesModel();
+
+                contentValues = new ContentValues();
+                contentValues.put(DatabaseInfo.Messages.SCHEDULE_ID,id);
+                contentValues.put(DatabaseInfo.Messages.CONTACT_NAME,messagesModel.getContact_name());
+                contentValues.put(DatabaseInfo.Messages.CONTACT_NUMBER,messagesModel.getContact_number());
+                contentValues.put(DatabaseInfo.Messages.MESSAGE,messagesModel.getMessage());
+                contentValues.put(DatabaseInfo.Messages.SENT_AT,messagesModel.getSent_at());
+
+                int message_id = (int)database.insert(DatabaseInfo.Messages.TABLE_NAME,null,contentValues);
+
+                String updateQuery = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET " + DatabaseInfo.Schedules.ACTION_ID + " = "
+                        + message_id + " WHERE " + DatabaseInfo.Schedules.ID + " = "+ id;
+
+                database.execSQL(updateQuery);
+            }
+
+
+
 
             database.close();
 
@@ -85,7 +129,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         try {
 
-            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME; // TODO: Only incomplete ones...
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE " + DatabaseInfo.Schedules.IS_NOTIFIED + " == 0";
 
             SQLiteDatabase database = this.getWritableDatabase();
             Cursor cursor = database.rawQuery(query,null);
@@ -114,6 +158,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
             }
 
+            cursor.close();
+            database.close();
 
 
         }catch (Exception e){

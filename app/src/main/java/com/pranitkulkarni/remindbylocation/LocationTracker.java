@@ -17,9 +17,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.pranitkulkarni.remindbylocation.database.DatabaseManager;
+import com.pranitkulkarni.remindbylocation.database.MessagesModel;
 import com.pranitkulkarni.remindbylocation.database.ScheduleModel;
 
 import java.util.ArrayList;
@@ -86,22 +88,49 @@ public class LocationTracker extends Service {
                     // Notify about each reminder...
                     for (int i =0; i < reminders.size(); i++){
 
+                        ScheduleModel reminder = reminders.get(i);
+
                         Intent openApp = new Intent(getApplicationContext(), MainActivity.class);
                         openApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,openApp,PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                        Notification notification = builder.setContentTitle(getString(R.string.notification_title)+" "+reminders.get(i).getPlace_name())
-                                .setContentText(getString(R.string.notification_text))
-                                .setColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary))    // Primary color will give some consistency to the user
-                                .setSmallIcon(R.drawable.ic_notification)
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true)
-                                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_text)))
-                                .build();
+                        if (reminder.getAction_type() == 1) // Send SMS
+                        {
+
+                            sendSMS(reminder.getMessagesModel());
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                            Notification notification = builder.setContentTitle("SMS sent to "+reminder.getMessagesModel().getContact_name() +" ?")
+                                    .setContentText(getString(R.string.notification_title)+" "+reminder.getPlace_name())
+                                    .setColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary))    // Primary color will give some consistency to the user
+                                    .setSmallIcon(R.drawable.ic_notification)
+                                    .setContentIntent(pendingIntent)
+                                    .setAutoCancel(true)
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_title)+" "+reminder.getPlace_name()))
+                                    .build();
 
 
-                        notificationManager.notify(0,notification);
+                            notificationManager.notify(0,notification);
+
+                        }
+                        else {
+
+                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                            Notification notification = builder.setContentTitle(reminder.getLabel())
+                                    .setContentText(getString(R.string.notification_title)+" "+reminder.getPlace_name())
+                                    .setColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary))    // Primary color will give some consistency to the user
+                                    .setSmallIcon(R.drawable.ic_notification)
+                                    .setContentIntent(pendingIntent)
+                                    .setAutoCancel(true)
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_title)+" "+reminder.getPlace_name()))
+                                    .build();
+
+
+                            notificationManager.notify(0,notification);
+
+                        }
+
+
 
 
                     }
@@ -167,6 +196,13 @@ public class LocationTracker extends Service {
         if (myLocationManager == null)
             myLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
+
+    }
+
+    public void sendSMS(MessagesModel message){
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(String.valueOf(message.getContact_number()),null,message.getMessage(),null,null);
 
     }
 

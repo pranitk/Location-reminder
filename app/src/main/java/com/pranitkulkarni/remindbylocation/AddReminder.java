@@ -80,6 +80,8 @@ public class AddReminder extends AppCompatActivity {
                 editor.apply();
                 */
 
+                // TODO: Update details...take contact number,message etc
+
                 if (databaseManager.addSchedule(model))
                     finish();
                 else

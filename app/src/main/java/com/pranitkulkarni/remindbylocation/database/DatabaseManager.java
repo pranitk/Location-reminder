@@ -41,7 +41,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     DatabaseInfo.Schedules.ACTION_TYPE + " INTEGER, "+
                     DatabaseInfo.Schedules.CREATED_AT + " TEXT, "+
                     DatabaseInfo.Schedules.NEEDS_CONFIRMATION + " BOOLEAN, "+
-                    DatabaseInfo.Schedules.IS_COMPLETED + " BOOLEAN "+
+                    DatabaseInfo.Schedules.IS_COMPLETED + " BOOLEAN, "+
                     "FOREIGN KEY ("+ DatabaseInfo.Schedules.ACTION_ID+") REFERENCES "+ DatabaseInfo.Messages.TABLE_NAME + " ("+ DatabaseInfo.Messages.ID+"))";
 
     private static final String CREATE_MESSAGES_TABLE =
@@ -100,7 +100,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 int message_id = (int)database.insert(DatabaseInfo.Messages.TABLE_NAME,null,contentValues);
 
                 String updateQuery = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET " + DatabaseInfo.Schedules.ACTION_ID + " = "
-                        + message_id + " WHERE " + DatabaseInfo.Schedules.ID + " = "+ id;
+                        + message_id + " WHERE " + DatabaseInfo.Schedules.ID + " == "+ id;
 
                 database.execSQL(updateQuery);
             }
@@ -121,6 +121,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
+    public void setNotified(int id){
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String query = "UPDATE " + DatabaseInfo.Schedules.TABLE_NAME + " SET " + DatabaseInfo.Schedules.IS_NOTIFIED + " = 1" +
+                " WHERE " + DatabaseInfo.Schedules.ID + " == " + id;
+
+        database.execSQL(query);
+
+        database.close();
+    }
 
     // Optimize this...
     public List<ScheduleModel> getLocationsToBeSearched(Location currentLocation){
@@ -143,6 +154,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 ScheduleModel model = new ScheduleModel();
                 model.setId(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ID)));
                 model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
+                model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
                 model.setLatitude(location.getLatitude());
                 model.setLongitude(location.getLongitude());
 
@@ -189,6 +201,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
                 model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
                 model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
+                model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
 
                 reminders.add(model);
 

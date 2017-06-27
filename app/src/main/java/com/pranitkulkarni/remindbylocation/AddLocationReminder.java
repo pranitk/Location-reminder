@@ -1,7 +1,6 @@
 package com.pranitkulkarni.remindbylocation;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +15,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.pranitkulkarni.remindbylocation.database.DatabaseManager;
 import com.pranitkulkarni.remindbylocation.database.ScheduleModel;
 
-public class AddReminder extends AppCompatActivity {
+public class AddLocationReminder extends AppCompatActivity {
 
 
     final int PLACE_PICKER_REQUEST = 1;
@@ -47,7 +46,7 @@ public class AddReminder extends AppCompatActivity {
 
                 try {
 
-                    startActivityForResult(builder.build(AddReminder.this), PLACE_PICKER_REQUEST);
+                    startActivityForResult(builder.build(AddLocationReminder.this), PLACE_PICKER_REQUEST);
 
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -63,7 +62,7 @@ public class AddReminder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DatabaseManager databaseManager = new DatabaseManager(AddReminder.this);
+                DatabaseManager databaseManager = new DatabaseManager(AddLocationReminder.this);
 
                 ScheduleModel model = new ScheduleModel();
                 model.setLatitude(latitude);

@@ -112,6 +112,9 @@ public class LocationTracker extends Service {
 
                             notificationManager.notify(0,notification);
 
+                            new DatabaseManager(getApplicationContext()).setNotified(reminder.getId());
+                            // TODO: Update Sent_at for the message....
+
                         }
                         else {
 
@@ -122,11 +125,13 @@ public class LocationTracker extends Service {
                                     .setSmallIcon(R.drawable.ic_notification)
                                     .setContentIntent(pendingIntent)
                                     .setAutoCancel(true)
-                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_title)+" "+reminder.getPlace_name()))
+                                    //.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_title)+" "+reminder.getPlace_name()))
                                     .build();
 
 
                             notificationManager.notify(0,notification);
+
+                            new DatabaseManager(getApplicationContext()).setNotified(reminder.getId());
 
                         }
 

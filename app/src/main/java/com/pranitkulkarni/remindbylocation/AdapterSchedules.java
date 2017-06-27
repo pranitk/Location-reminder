@@ -36,6 +36,7 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
 
         final ScheduleModel model = list.get(position);
         holder.placeName.setText(model.getPlace_name());
+        holder.reminderText.setText(model.getLabel());
 
     }
 
@@ -46,12 +47,13 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
 
     public static class myViewHolder extends RecyclerView.ViewHolder{
 
-        TextView placeName;
+        TextView placeName,reminderText;
 
         public myViewHolder(View itemView){
             super(itemView);
 
             placeName = (TextView)itemView.findViewById(R.id.place_name);
+            reminderText = (TextView)itemView.findViewById(R.id.reminder_text);
         }
 
     }

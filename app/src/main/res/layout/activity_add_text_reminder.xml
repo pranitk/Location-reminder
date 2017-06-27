@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pranitkulkarni.remindbylocation.AddLocationReminder">
+    tools:context="com.pranitkulkarni.remindbylocation.AddTextReminder">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -69,19 +69,11 @@
 
             </android.support.v7.widget.CardView>
 
-
-
-            <View
-                android:background="@color/grey_200"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-
-
             <TextView
                 android:layout_marginTop="24dp"
                 android:textStyle="bold"
                 android:padding="8dp"
-                android:text="Send SMS"
+                android:text="Remind me to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -91,55 +83,13 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/message"
+                    android:id="@+id/text"
                     android:layout_margin="8dp"
-                    android:hint="Enter message"
+                    android:hint="Enter text"
                     android:background="@android:color/transparent"
                     android:minHeight="64dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <TextView
-                android:layout_marginTop="24dp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:text="To"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.CardView
-                app:cardCornerRadius="0dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp">
-
-                    <ImageView
-                        android:id="@+id/select_contact"
-                        app:srcCompat="@drawable/ic_contacts_dark"
-                        android:padding="12dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp" />
-
-                    <EditText
-                        android:layout_toLeftOf="@id/select_contact"
-                        android:id="@+id/phone_number"
-                        android:hint="Enter phone number"
-                        android:layout_margin="8dp"
-                        android:minHeight="56dp"
-                        android:background="@android:color/transparent"
-                        android:layout_centerVertical="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </RelativeLayout>
 
             </android.support.v7.widget.CardView>
 
@@ -152,8 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp" />
 
-        </LinearLayout>
-
+    </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

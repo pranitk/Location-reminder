@@ -40,6 +40,10 @@ public class ScheduleModel {
         this.action_type = action_type;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     public void setMessagesModel(MessagesModel messagesModel) {
         this.messagesModel = messagesModel;
     }

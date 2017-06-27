@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pranitkulkarni.remindbylocation.AddReminder;
-import com.pranitkulkarni.remindbylocation.MainActivity;
+import com.pranitkulkarni.remindbylocation.AddLocationReminder;
+import com.pranitkulkarni.remindbylocation.AddTextReminder;
 import com.pranitkulkarni.remindbylocation.R;
 
 
@@ -34,7 +34,8 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getActivity(),AddReminder.class));
+                //startActivity(new Intent(getActivity(),AddLocationReminder.class));
+                startActivity(new Intent(getActivity(),AddTextReminder.class));
 
             }
         });

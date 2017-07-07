@@ -1,13 +1,76 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pranitkulkarni.remindbylocation.fragments.FragmentSettings">
+    android:background="@color/grey_200"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:textSize="20sp"
+        android:text="@string/about_developer"
+        android:padding="12dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content" />
 
-</FrameLayout>
+
+    <View
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/grey_300"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/contact_developer"
+        android:background="@android:color/white"
+        android:padding="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_developer"
+            android:layout_width="48dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="@string/contact_developer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/grey_300"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:id="@+id/rate_on_playstore"
+        android:background="@android:color/white"
+        android:padding="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_rate_review"
+            android:layout_width="48dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:gravity="center_vertical"
+            android:text="@string/rate_on_playstore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

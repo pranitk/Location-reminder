@@ -188,7 +188,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         try {
 
-            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME;
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
 
             SQLiteDatabase database = this.getWritableDatabase();
             Cursor cursor = database.rawQuery(query,null);
@@ -209,6 +209,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
             }
 
 
+            cursor.close();
+            database.close();
 
         }catch (Exception e){
             e.printStackTrace();

@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pranitkulkarni.remindbylocation.AddLocationReminder;
+import com.pranitkulkarni.remindbylocation.AddMessageReminder;
 import com.pranitkulkarni.remindbylocation.AddTextReminder;
 import com.pranitkulkarni.remindbylocation.R;
 
@@ -30,15 +30,26 @@ public class FragmentHome extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
 
-        view.findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.add_text_reminder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //startActivity(new Intent(getActivity(),AddLocationReminder.class));
+                //startActivity(new Intent(getActivity(),AddMessageReminder.class));
                 startActivity(new Intent(getActivity(),AddTextReminder.class));
 
             }
         });
+
+        view.findViewById(R.id.add_message_reminder).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //startActivity(new Intent(getActivity(),AddMessageReminder.class));
+                startActivity(new Intent(getActivity(),AddMessageReminder.class));
+
+            }
+        });
+
 
         return view;
     }

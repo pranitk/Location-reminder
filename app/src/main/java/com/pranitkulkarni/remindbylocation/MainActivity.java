@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentDashboard()).commit();
                     return true;
 
-                case R.id.navigation_notifications:
+                case R.id.navigation_about:
                     getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentSettings()).commit();
                     return true;
             }

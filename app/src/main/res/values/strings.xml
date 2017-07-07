@@ -5,7 +5,16 @@
     <string name="title_notifications">Notifications</string>
     <string name="notification_text">Your action will be performed now! Hurray!</string>
     <string name="notification_title">You are near</string>
+    <string name="title_about">About</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Click to add</string>
+    <string name="message_reminder_note">Schedule an SMS to be sent when you are at a selected location</string>
+    <string name="text_reminder_note">Remind to do something. E.g. Buy frappe, call Chandler, meet Joe</string>
+
+
+    <string name="about_developer">Made by Pranit Kulkarni</string>
+    <string name="rate_on_playstore">Rate on Playstore</string>
+    <string name="contact_developer">Contact developer / Give feedback</string>
+
 </resources>

@@ -34,6 +34,7 @@ public class AddTextReminder extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle("Add");
         locationTv = (TextView)findViewById(R.id.location_text);
         contentTv = (TextView)findViewById(R.id.text);
 
@@ -63,19 +64,22 @@ public class AddTextReminder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ScheduleModel model = new ScheduleModel();
-                model.setLatitude(latitude);
-                model.setLongitude(longitude);
-                model.setPlace_name(place_name);
-                model.setCreated_at(""+ Calendar.getInstance().getTime());
-                model.setLabel(contentTv.getText().toString());
-                model.setAction_type(0);
+                if (latitude != null || !contentTv.getText().toString().isEmpty()){
 
-                DatabaseManager databaseManager = new DatabaseManager(AddTextReminder.this);
+                    ScheduleModel model = new ScheduleModel();
+                    model.setLatitude(latitude);
+                    model.setLongitude(longitude);
+                    model.setPlace_name(place_name);
+                    model.setCreated_at(""+ Calendar.getInstance().getTime());
+                    model.setLabel(contentTv.getText().toString());
+                    model.setAction_type(0);
 
-                if (databaseManager.addSchedule(model))
-                    finish();
+                    DatabaseManager databaseManager = new DatabaseManager(AddTextReminder.this);
 
+                    if (databaseManager.addSchedule(model))
+                        finish();
+
+                }
 
             }
         });

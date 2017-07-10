@@ -34,7 +34,6 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //startActivity(new Intent(getActivity(),AddMessageReminder.class));
                 startActivity(new Intent(getActivity(),AddTextReminder.class));
 
             }
@@ -44,7 +43,6 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //startActivity(new Intent(getActivity(),AddMessageReminder.class));
                 startActivity(new Intent(getActivity(),AddMessageReminder.class));
 
             }

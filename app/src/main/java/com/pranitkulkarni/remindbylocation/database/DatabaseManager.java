@@ -157,6 +157,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
                 model.setLatitude(location.getLatitude());
                 model.setLongitude(location.getLongitude());
+                model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
 
                 Log.d("Reminder "+model.getId()," at "+model.getPlace_name());
 
@@ -202,6 +203,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
                 model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
                 model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
+                Boolean isNotified = (cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)) == 1);
+                model.setNotified(isNotified);
+
 
                 reminders.add(model);
 

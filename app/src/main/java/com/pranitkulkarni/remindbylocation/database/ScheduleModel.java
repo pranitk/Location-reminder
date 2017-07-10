@@ -9,7 +9,7 @@ public class ScheduleModel {
     private int id = 0,action_id=0,action_type=0;
     private String label = "",place_name="",created_at="";
     private Double longitude,latitude;
-    private Boolean isCompleted = false;
+    private Boolean isCompleted = false,isNotified = false;
     private MessagesModel messagesModel;
 
     public void setId(int id) {
@@ -46,6 +46,10 @@ public class ScheduleModel {
 
     public void setMessagesModel(MessagesModel messagesModel) {
         this.messagesModel = messagesModel;
+    }
+
+    public void setNotified(Boolean notified) {
+        isNotified = notified;
     }
 
     ///
@@ -90,5 +94,9 @@ public class ScheduleModel {
 
     public MessagesModel getMessagesModel() {
         return messagesModel;
+    }
+
+    public Boolean getNotified() {
+        return isNotified;
     }
 }

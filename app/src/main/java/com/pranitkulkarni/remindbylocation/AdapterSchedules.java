@@ -42,9 +42,13 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
         holder.placeName.setText(model.getPlace_name());
         holder.reminderText.setText(model.getLabel());
         Log.d(""+model.getPlace_name()," Created at - "+model.getCreated_at());
+        Log.d(""+model.getLabel()," type - "+model.getAction_type());
 
-        if (model.getAction_type() == 1)
-            holder.logo.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sms_dark));
+        if (model.getAction_type() == 1) {
+            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_sms_dark));
+            holder.reminderSubText.setText(model.getMessagesModel().getMessage());
+            holder.reminderSubText.setVisibility(View.VISIBLE);
+        }
 
 
         if (model.getNotified()){

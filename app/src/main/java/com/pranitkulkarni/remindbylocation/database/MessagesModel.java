@@ -6,8 +6,8 @@ package com.pranitkulkarni.remindbylocation.database;
 
 public class MessagesModel {
 
-    private int id=0, schedule_id=0,contact_number;
-    private String message="",contact_name="",sent_at="";
+    private int id=0, schedule_id=0;
+    private String message="",contact_name="",sent_at="",contact_number="";
 
     public void setId(int id) {
         this.id = id;
@@ -17,7 +17,7 @@ public class MessagesModel {
         this.contact_name = contact_name;
     }
 
-    public void setContact_number(int contact_number) {
+    public void setContact_number(String contact_number) {
         this.contact_number = contact_number;
     }
 
@@ -45,7 +45,7 @@ public class MessagesModel {
         return schedule_id;
     }
 
-    public int getContact_number() {
+    public String getContact_number() {
         return contact_number;
     }
 

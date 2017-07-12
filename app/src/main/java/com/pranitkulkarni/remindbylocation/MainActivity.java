@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // TODO: Get permissions
+
         getSupportFragmentManager().beginTransaction().replace(R.id.content,new FragmentHome()).commit();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);

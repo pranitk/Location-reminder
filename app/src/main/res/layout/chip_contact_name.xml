@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
+    android:layout_margin="8dp"
+    android:id="@+id/click_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:paddingRight="16dp"
+        android:paddingLeft="48dp"
+        android:background="@drawable/chip"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:textSize="10sp"
+            android:text="Contact Selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/name"
+            android:text="Namrata Jadhav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/initial"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:text="N"
+        android:textAllCaps="true"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+
+
+
+</RelativeLayout>

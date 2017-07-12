@@ -133,6 +133,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
         database.close();
     }
 
+    public MessagesModel getMessageDetails(int id){
+
+        MessagesModel model = new MessagesModel();
+        String query = "Select * from "+ DatabaseInfo.Messages.TABLE_NAME + " WHERE " + DatabaseInfo.Messages.ID + " == " + id;
+
+        try{
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery(query,null);
+
+            if (cursor.moveToFirst()){
+
+                model.setId(id);
+                model.setMessage(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.MESSAGE)));
+                model.setContact_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NAME)));
+                model.setContact_number(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NUMBER)));
+
+            }
+
+            cursor.close();
+            database.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return model;
+    }
+
     // Optimize this...
     public List<ScheduleModel> getLocationsToBeSearched(Location currentLocation){
 
@@ -157,7 +186,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
                 model.setLatitude(location.getLatitude());
                 model.setLongitude(location.getLongitude());
+                model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
                 model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
+
+                if (cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)) == 1)  // sms
+                {
+                    int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
+                    model.setMessagesModel(getMessageDetails(message_id));
+                }
 
                 Log.d("Reminder "+model.getId()," at "+model.getPlace_name());
 
@@ -203,13 +239,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
                 model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
                 model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
+                model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
                 Boolean isNotified = (cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)) == 1);
+                model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
                 model.setNotified(isNotified);
 
+                if (model.getAction_type() == 1)  // sms
+                {
+                    int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
+                    model.setMessagesModel(getMessageDetails(message_id));
+                }
 
                 reminders.add(model);
-
-
             }
 
 

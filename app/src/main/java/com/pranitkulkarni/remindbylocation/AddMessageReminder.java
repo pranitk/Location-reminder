@@ -1,6 +1,9 @@
 package com.pranitkulkarni.remindbylocation;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -28,9 +32,11 @@ public class AddMessageReminder extends AppCompatActivity {
     final int PLACE_PICKER_REQUEST = 1;
     //SharedPreferences sharedPreferences;
     Double latitude,longitude;
-    String place_name="";
-    TextView locationTv;
+    String place_name="",contact_name="";
+    TextView locationTv,contactChipName,contactChipInitial;
     EditText messageEt,phoneEt;
+    private static final int RESULT_PICK_CONTACT = 24;
+    RelativeLayout contactChip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,9 @@ public class AddMessageReminder extends AppCompatActivity {
         locationTv = (TextView)findViewById(R.id.location_text);
         messageEt = (EditText) findViewById(R.id.message);
         phoneEt = (EditText)findViewById(R.id.phone_number);
+        contactChip = (RelativeLayout) findViewById(R.id.contact_chip);
+        contactChipName = (TextView)findViewById(R.id.name);
+        contactChipInitial = (TextView)findViewById(R.id.initial);
 
         //sharedPreferences = getSharedPreferences("pranit",MODE_PRIVATE);
 
@@ -67,6 +76,17 @@ public class AddMessageReminder extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.select_contact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+
+            }
+        });
+
 
         findViewById(R.id.schedule).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,13 +101,20 @@ public class AddMessageReminder extends AppCompatActivity {
                     model.setLongitude(longitude);
                     model.setPlace_name(place_name);
                     model.setCreated_at(String.valueOf(Calendar.getInstance().getTimeInMillis()));  //TODO check this out..
-                    model.setAction_id(1);
+                    model.setAction_type(1);
 
 
                     MessagesModel messagesModel = new MessagesModel();
                     messagesModel.setMessage(messageEt.getText().toString());
-                    messagesModel.setContact_number(Integer.parseInt(phoneEt.getText().toString()));
-                    messagesModel.setContact_name("");
+                    messagesModel.setContact_number(phoneEt.getText().toString());
+
+                    if (contact_name.isEmpty())
+                        messagesModel.setContact_name(phoneEt.getText().toString());
+                    else
+                        messagesModel.setContact_name(contact_name);
+
+                    model.setMessagesModel(messagesModel);
+                    model.setLabel("Send SMS to "+messagesModel.getContact_name());
 
                     if (databaseManager.addSchedule(model))
                         finish();
@@ -97,6 +124,18 @@ public class AddMessageReminder extends AppCompatActivity {
                 }
 
 
+
+            }
+        });
+
+        findViewById(R.id.remove_selected_contact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                contact_name = "";
+                phoneEt.setEnabled(true);
+                phoneEt.setText(null);
+                contactChip.setVisibility(View.GONE);
 
             }
         });
@@ -140,6 +179,37 @@ public class AddMessageReminder extends AppCompatActivity {
         return true;
     }
 
+
+    private void contactPicked(Intent data) {
+        Cursor cursor = null;
+
+        try {
+            // getData() method will have the Content Uri of the selected contact
+            Uri uri = data.getData();
+            //Query the content uri
+            cursor = getContentResolver().query(uri, null, null, null, null);
+
+            if(cursor.moveToFirst()){
+
+                contact_name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                phoneEt.setText(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+
+                phoneEt.setEnabled(false);
+                contactChipInitial.setText(contact_name.substring(0,1));
+                contactChipName.setText(contact_name);
+
+            }
+
+
+            cursor.close();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -169,6 +239,15 @@ public class AddMessageReminder extends AppCompatActivity {
                 Log.d("Selected Latitude",""+latitude);
                 Log.d("Selected Longitude",""+longitude);
 
+            }
+
+        }
+
+        if (requestCode == RESULT_PICK_CONTACT){
+
+            if (resultCode == RESULT_OK) {
+                contactChip.setVisibility(View.VISIBLE);
+                contactPicked(data);
             }
 
         }

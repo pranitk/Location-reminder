@@ -97,10 +97,13 @@ public class LocationTracker extends Service {
                         if (reminder.getAction_type() == 1) // Send SMS
                         {
 
-                            sendSMS(reminder.getMessagesModel());
+                            String notification_title = "SMS sent to "+reminder.getMessagesModel().getContact_name();
+
+                            if(!sendSMS(reminder.getMessagesModel()))   //.. if failed
+                                notification_title = "SMS sending failed";
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                            Notification notification = builder.setContentTitle("SMS sent to "+reminder.getMessagesModel().getContact_name() +" ?")
+                            Notification notification = builder.setContentTitle(notification_title)
                                     .setContentText(getString(R.string.notification_title)+" "+reminder.getPlace_name())
                                     .setColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary))    // Primary color will give some consistency to the user
                                     .setSmallIcon(R.drawable.ic_notification)
@@ -204,11 +207,21 @@ public class LocationTracker extends Service {
 
     }
 
-    public void sendSMS(MessagesModel message){
+    public Boolean sendSMS(MessagesModel message){
 
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(String.valueOf(message.getContact_number()),null,message.getMessage(),null,null);
+        try{
 
+            Log.d("Sending sms ",message.getMessage());
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(message.getContact_number(),null,message.getMessage(),null,null);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+
+        return true;
     }
 
 

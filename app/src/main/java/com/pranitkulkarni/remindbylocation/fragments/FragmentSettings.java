@@ -4,6 +4,7 @@ package com.pranitkulkarni.remindbylocation.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class FragmentSettings extends Fragment {
     public FragmentSettings() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -41,6 +43,15 @@ public class FragmentSettings extends Fragment {
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null)
                     startActivity(intent);
 
+
+            }
+        });
+
+        rootview.findViewById(R.id.rate_on_playstore).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ;
 
             }
         });

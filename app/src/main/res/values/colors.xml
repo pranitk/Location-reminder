@@ -22,4 +22,7 @@
     <color name="grey_800">#424242</color>
     <color name="grey_900">#212121</color>
 
+    <color name="deep_orange_600">#F4511E</color>
+    <color name="green_600">#43A047</color>
+
 </resources>

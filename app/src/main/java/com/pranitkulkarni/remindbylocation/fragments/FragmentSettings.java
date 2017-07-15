@@ -51,7 +51,7 @@ public class FragmentSettings extends Fragment {
             @Override
             public void onClick(View v) {
 
-                ;
+                // TODO:
 
             }
         });

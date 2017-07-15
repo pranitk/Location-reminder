@@ -41,20 +41,30 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
         final ScheduleModel model = list.get(position);
         holder.placeName.setText(model.getPlace_name());
         holder.reminderText.setText(model.getLabel());
+        Log.d("------","-------");
         Log.d(""+model.getPlace_name()," Created at - "+model.getCreated_at());
         Log.d(""+model.getLabel()," type - "+model.getAction_type());
+        Log.d("Notified ",""+model.getNotified());
+        Log.d("------","-------");
 
         if (model.getAction_type() == 1) {
-            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_sms_dark));
+            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_sms_green));
             holder.reminderSubText.setText(model.getMessagesModel().getMessage());
             holder.reminderSubText.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.logo.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_text_reminder_red));
+            holder.reminderSubText.setVisibility(View.GONE);
         }
 
 
         if (model.getNotified()){
             holder.placeName.setTextColor(ContextCompat.getColor(context,R.color.grey_600));
             holder.reminderText.setTypeface(Typeface.DEFAULT);
-
+        }
+        else {
+            holder.reminderText.setTypeface(Typeface.DEFAULT_BOLD);
+            holder.placeName.setTextColor(ContextCompat.getColor(context,R.color.colorPrimaryDark));
         }
 
     }

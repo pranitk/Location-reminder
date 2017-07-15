@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:id="@+id/reminder_type_logo"
             android:padding="12dp"
-            app:srcCompat="@drawable/ic_text_reminder_dark"
+            app:srcCompat="@drawable/ic_text_reminder_red"
             android:layout_width="48dp"
             android:layout_height="48dp" />
 

@@ -133,6 +133,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
         database.close();
     }
 
+
+    public void updateSentAt(String sent_at,int id){
+
+        SQLiteDatabase database = this.getWritableDatabase();
+
+        String query = "UPDATE " + DatabaseInfo.Messages.TABLE_NAME + " SET " + DatabaseInfo.Messages.SENT_AT + " = " + sent_at +
+                " WHERE " + DatabaseInfo.Messages.ID + " == " + id;
+
+        database.execSQL(query);
+
+        database.close();
+
+    }
+
     public MessagesModel getMessageDetails(int id){
 
         MessagesModel model = new MessagesModel();
@@ -193,6 +207,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 {
                     int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
                     model.setMessagesModel(getMessageDetails(message_id));
+                    model.setAction_id(message_id);
                 }
 
                 Log.d("Reminder "+model.getId()," at "+model.getPlace_name());
@@ -225,7 +240,107 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         try {
 
-            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
+            //String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " ORDER BY " + DatabaseInfo.Schedules.IS_NOTIFIED + " ASC "
+                    + ",  "+DatabaseInfo.Schedules.ID+" DESC";
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery(query,null);
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+
+
+                ScheduleModel model = new ScheduleModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ID)));
+                model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
+                model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
+                model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
+                model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
+                model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
+                Boolean isNotified = (cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)) == 1);
+                model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
+                model.setNotified(isNotified);
+
+                if (model.getAction_type() == 1)  // sms
+                {
+                    int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
+                    model.setMessagesModel(getMessageDetails(message_id));
+                }
+
+                reminders.add(model);
+            }
+
+
+            cursor.close();
+            database.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return reminders;
+
+    }
+
+    public List<ScheduleModel> getPendingSchedules(){
+
+        ArrayList<ScheduleModel> reminders = new ArrayList<>();
+
+        try {
+
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE " + DatabaseInfo.Schedules.IS_NOTIFIED + " == 0" +
+                    " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery(query,null);
+
+            for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+
+
+                ScheduleModel model = new ScheduleModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ID)));
+                model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
+                model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
+                model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
+                model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
+                model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
+                Boolean isNotified = (cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)) == 1);
+                model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
+                model.setNotified(isNotified);
+
+                if (model.getAction_type() == 1)  // sms
+                {
+                    int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
+                    model.setMessagesModel(getMessageDetails(message_id));
+                }
+
+                reminders.add(model);
+            }
+
+
+            cursor.close();
+            database.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return reminders;
+
+    }
+
+    public List<ScheduleModel> getCompletedSchedules(){
+
+        ArrayList<ScheduleModel> reminders = new ArrayList<>();
+
+        try {
+
+            //String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
+
+            String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE " + DatabaseInfo.Schedules.IS_NOTIFIED + " == 1" +
+                    " ORDER BY " + DatabaseInfo.Schedules.ID + " DESC";
 
             SQLiteDatabase database = this.getWritableDatabase();
             Cursor cursor = database.rawQuery(query,null);

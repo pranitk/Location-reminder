@@ -35,12 +35,23 @@ public class FragmentDashboard extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
+        /*RecyclerView recyclerViewPending = (RecyclerView)view.findViewById(R.id.recyclerView1);
+        RecyclerView recyclerViewCompleted = (RecyclerView)view.findViewById(R.id.recyclerView2);
+
+        List<ScheduleModel> pendingSchedules = new DatabaseManager(getActivity()).getPendingSchedules();
+        List<ScheduleModel> completedSchedules = new DatabaseManager(getActivity()).getCompletedSchedules();
+
+        recyclerViewPending.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerViewPending.setAdapter(new AdapterSchedules(pendingSchedules,getContext()));
+
+        recyclerViewCompleted.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerViewCompleted.setAdapter(new AdapterSchedules(completedSchedules,getContext()));*/
+
         RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
-
-        List<ScheduleModel> reminders = new DatabaseManager(getActivity()).getAllSchedules();
-
+        List<ScheduleModel> schedules = new DatabaseManager(getActivity()).getAllSchedules();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new AdapterSchedules(reminders,getContext()));
+        recyclerView.setAdapter(new AdapterSchedules(schedules,getContext()));
+
 
         return view;
     }

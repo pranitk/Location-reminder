@@ -100,7 +100,7 @@ public class AddMessageReminder extends AppCompatActivity {
                     model.setLatitude(latitude);
                     model.setLongitude(longitude);
                     model.setPlace_name(place_name);
-                    model.setCreated_at(String.valueOf(Calendar.getInstance().getTimeInMillis()));  //TODO check this out..
+                    model.setCreated_at(""+ Calendar.getInstance().getTime());
                     model.setAction_type(1);
 
 

@@ -25,6 +25,8 @@ import com.pranitkulkarni.remindbylocation.database.MessagesModel;
 import com.pranitkulkarni.remindbylocation.database.ScheduleModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +40,7 @@ public class LocationTracker extends Service {
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 5f;
     SharedPreferences sharedPreferences;
+    int random_number=0;
 
     @Nullable
     @Override
@@ -113,10 +116,12 @@ public class LocationTracker extends Service {
                                     .build();
 
 
-                            notificationManager.notify(0,notification);
+                            notificationManager.notify(random_number,notification);
 
-                            new DatabaseManager(getApplicationContext()).setNotified(reminder.getId());
-                            // TODO: Update Sent_at for the message....
+                            DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+                            databaseManager.setNotified(reminder.getId());
+                            databaseManager.updateSentAt(String.valueOf(Calendar.getInstance().getTime()),reminder.getAction_id());
+
 
                         }
                         else {
@@ -132,7 +137,7 @@ public class LocationTracker extends Service {
                                     .build();
 
 
-                            notificationManager.notify(0,notification);
+                            notificationManager.notify(random_number,notification);
 
                             new DatabaseManager(getApplicationContext()).setNotified(reminder.getId());
 
@@ -182,6 +187,8 @@ public class LocationTracker extends Service {
         sharedPreferences = getApplicationContext().getSharedPreferences("pranit",MODE_PRIVATE);
 
         initializeLocationManager();
+
+        random_number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 
         try {
 

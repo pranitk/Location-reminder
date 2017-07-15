@@ -213,7 +213,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 Log.d("Reminder "+model.getId()," at "+model.getPlace_name());
 
                 Float distance = currentLocation.distanceTo(location);
-                if (distance < 100){    // Check if it's nearby..
+                if (distance < 80){    // Check if it's nearby..
 
                     reminders.add(model);
                     Log.d("Nearby - "+model.getPlace_name(),"by meters "+distance);

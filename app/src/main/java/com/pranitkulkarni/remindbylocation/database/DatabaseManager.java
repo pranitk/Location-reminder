@@ -164,10 +164,56 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setContact_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NAME)));
                 model.setContact_number(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NUMBER)));
 
+                Log.d("ID",""+model.getId());
+                Log.d("Message",model.getMessage());
+                Log.d("Contact name",model.getContact_name());
+
             }
 
             cursor.close();
             database.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return model;
+    }
+
+
+    public ScheduleModel getSchedule(int id){
+
+        ScheduleModel model = new ScheduleModel();
+        String query = "Select * from "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE " + DatabaseInfo.Schedules.ID + " == " + id;
+
+        try{
+
+            SQLiteDatabase database = this.getWritableDatabase();
+            Cursor cursor = database.rawQuery(query,null);
+
+            if (cursor.moveToFirst()){
+
+                model.setId(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ID)));
+                model.setPlace_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.PLACE_NAME)));
+                model.setLabel(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.LABEL)));
+                model.setLatitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LATITUDE)));
+                model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
+                model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
+                model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
+
+                if (model.getAction_type() == 1)  // sms
+                {
+                    int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
+                    Log.d("Action ID ",""+message_id);
+                    model.setMessagesModel(getMessageDetails(message_id));
+                    model.setAction_id(message_id);
+
+                }
+            }
+
+            cursor.close();
+            database.close();
+
 
         }catch (Exception e){
             e.printStackTrace();

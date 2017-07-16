@@ -11,6 +11,8 @@ public class ScheduleModel {
     private Double longitude,latitude;
     private Boolean isCompleted = false,isNotified = false;
     private MessagesModel messagesModel;
+    //String systemFormatString = "EEE MMM d HH:mm:ss z yyyy";
+    //String myFormatString = "HH:mm";
 
     public void setId(int id) {
         this.id = id;
@@ -99,4 +101,7 @@ public class ScheduleModel {
     public Boolean getNotified() {
         return isNotified;
     }
+
+
+
 }

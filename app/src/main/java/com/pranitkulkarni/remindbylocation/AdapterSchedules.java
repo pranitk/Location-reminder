@@ -1,6 +1,7 @@
 package com.pranitkulkarni.remindbylocation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,17 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
             holder.placeName.setTextColor(ContextCompat.getColor(context,R.color.colorPrimaryDark));
         }
 
+        holder.clickLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(context,ViewReminder.class);
+                intent.putExtra("schedule_id",model.getId());
+                context.startActivity(intent);
+
+            }
+        });
+
     }
 
     @Override
@@ -78,10 +90,12 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
 
         TextView placeName,reminderText,reminderSubText;
         ImageView logo;
+        View clickLayout;
 
         public myViewHolder(View itemView){
             super(itemView);
 
+            clickLayout = itemView.findViewById(R.id.click_layout);
             placeName = (TextView)itemView.findViewById(R.id.location_text);
             reminderText = (TextView)itemView.findViewById(R.id.reminder_text);
             reminderSubText = (TextView)itemView.findViewById(R.id.reminder_sub_text);

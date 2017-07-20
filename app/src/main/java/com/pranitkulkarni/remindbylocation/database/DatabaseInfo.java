@@ -25,6 +25,7 @@ public class DatabaseInfo {
         public static final String ACTION_TYPE = "action_type";
         public static final String CREATED_AT = "created_at";
         public static final String NEEDS_CONFIRMATION = "needs_confirmation";
+        public static final String NOTIFIED_AT = "notified_at";
 
 
     }

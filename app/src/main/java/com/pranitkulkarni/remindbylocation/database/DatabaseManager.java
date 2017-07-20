@@ -136,10 +136,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public void updateSentAt(String sent_at,int id){
 
+        Log.d("updating sent_at of "+id," "+sent_at);
+
+
         SQLiteDatabase database = this.getWritableDatabase();
 
-        String query = "UPDATE " + DatabaseInfo.Messages.TABLE_NAME + " SET " + DatabaseInfo.Messages.SENT_AT + " = " + sent_at +
-                " WHERE " + DatabaseInfo.Messages.ID + " == " + id;
+        String query = "UPDATE " + DatabaseInfo.Messages.TABLE_NAME + " SET " + DatabaseInfo.Messages.SENT_AT + " = '" + sent_at +
+                "' WHERE " + DatabaseInfo.Messages.ID + " == " + id;
 
         database.execSQL(query);
 
@@ -163,10 +166,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setMessage(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.MESSAGE)));
                 model.setContact_name(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NAME)));
                 model.setContact_number(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.CONTACT_NUMBER)));
+                model.setSent_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Messages.SENT_AT)));
 
                 Log.d("ID",""+model.getId());
-                Log.d("Message",model.getMessage());
                 Log.d("Contact name",model.getContact_name());
+                Log.d("Message",model.getMessage());
+                Log.d("Sent at",""+model.getSent_at());
 
             }
 
@@ -311,6 +316,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 {
                     int message_id = cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_ID));
                     model.setMessagesModel(getMessageDetails(message_id));
+                    model.setAction_id(message_id);
                 }
 
                 reminders.add(model);

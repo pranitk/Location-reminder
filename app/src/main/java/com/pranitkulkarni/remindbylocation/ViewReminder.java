@@ -1,7 +1,7 @@
 package com.pranitkulkarni.remindbylocation;
 
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
+
+import java.text.SimpleDateFormat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ public class ViewReminder extends AppCompatActivity {
     TextView locationTv, contactTv, reminderTv, sentAtTv,createdAtTv;
     int schedule_id = 0;
     ScheduleModel scheduleModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,27 @@ public class ViewReminder extends AppCompatActivity {
         Log.d("ID retreived",""+scheduleModel.getId());
         locationTv.setText(scheduleModel.getPlace_name());
 
+        SimpleDateFormat systemDateFormat = new SimpleDateFormat(getString(R.string.system_date_format));
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM");
+
         if (scheduleModel.getAction_type() == 1){   // SMS reminder...
 
             MessagesModel messageModel = scheduleModel.getMessagesModel();
             contactTv.setText(messageModel.getContact_name());
             reminderTv.setText(messageModel.getMessage());
-            sentAtTv.setText(messageModel.getSent_at());
+            //sentAtTv.setText(messageModel.getSent_at());
 
+            try{
+
+                String time = timeFormat.format(systemDateFormat.parse(messageModel.getSent_at()));
+                String day = dateFormat.format(systemDateFormat.parse(messageModel.getSent_at()));
+
+                sentAtTv.setText("Sent on "+day+" at "+time);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
         else {
@@ -66,16 +81,33 @@ public class ViewReminder extends AppCompatActivity {
 
             ImageView notificationIcon = (ImageView)findViewById(R.id.notified_icon);
             notificationIcon.setImageDrawable(ContextCompat.getDrawable(ViewReminder.this, R.drawable.ic_notifications_dark));
-            sentAtTv.setText("Notified at");
+
+            // TODO: Add NOTIFIED_AT column ..
+            sentAtTv.setText("Notified at ");
+            /*try{
+
+                String time = timeFormat.format(systemDateFormat.parse());
+                String day = dateFormat.format(systemDateFormat.parse());
+
+                sentAtTv.setText("Notified at "+day+" at "+time);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }*/
+
 
         }
 
+        try{
 
+            String time = timeFormat.format(systemDateFormat.parse(scheduleModel.getCreated_at()));
+            String day = dateFormat.format(systemDateFormat.parse(scheduleModel.getCreated_at()));
 
-        createdAtTv.setText("Created on "+scheduleModel.getCreated_at());
+            createdAtTv.setText("Created on "+day+" at "+time);
 
-
-
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

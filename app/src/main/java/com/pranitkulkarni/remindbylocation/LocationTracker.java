@@ -120,7 +120,7 @@ public class LocationTracker extends Service {
 
                             DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
                             databaseManager.setNotified(reminder.getId());
-                            databaseManager.updateSentAt(String.valueOf(Calendar.getInstance().getTime()),reminder.getAction_id());
+                            databaseManager.updateSentAt(String.valueOf(Calendar.getInstance().getTime()),reminder.getAction_id()); //TODO..
 
 
                         }

@@ -100,9 +100,12 @@ public class LocationTracker extends Service {
                         if (reminder.getAction_type() == 1) // Send SMS
                         {
 
+                            DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
                             String notification_title = "SMS sent to "+reminder.getMessagesModel().getContact_name();
 
-                            if(!sendSMS(reminder.getMessagesModel()))   //.. if failed
+                            if(sendSMS(reminder.getMessagesModel()))
+                                databaseManager.updateSentAt(String.valueOf(Calendar.getInstance().getTime()),reminder.getAction_id());
+                            else    //.. if failed
                                 notification_title = "SMS sending failed";
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
@@ -118,9 +121,9 @@ public class LocationTracker extends Service {
 
                             notificationManager.notify(random_number,notification);
 
-                            DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+
                             databaseManager.setNotified(reminder.getId());
-                            databaseManager.updateSentAt(String.valueOf(Calendar.getInstance().getTime()),reminder.getAction_id()); //TODO..
+
 
 
                         }

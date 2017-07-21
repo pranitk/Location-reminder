@@ -19,7 +19,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="64dp"
         android:background="@android:color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
@@ -157,7 +157,7 @@
         app:cardElevation="@dimen/cardview_default_elevation"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="72dp">
+        android:layout_height="64dp">
 
 
         <LinearLayout
@@ -165,6 +165,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/delete"
                 android:background="?attr/selectableItemBackground"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -175,9 +176,10 @@
                     android:padding="8dp"
                     app:srcCompat="@drawable/ic_delete_dark"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="40dp" />
 
                 <TextView
+                    android:textAllCaps="true"
                     android:gravity="center"
                     android:text="Delete"
                     android:layout_width="match_parent"
@@ -186,11 +188,14 @@
             </LinearLayout>
 
             <View
-                android:background="@color/grey_300"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/grey_200"
                 android:layout_width="1dp"
                 android:layout_height="match_parent"/>
 
             <LinearLayout
+                android:id="@+id/mark_as_done"
                 android:background="?attr/selectableItemBackground"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -201,9 +206,10 @@
                     android:padding="4dp"
                     app:srcCompat="@drawable/ic_done_dark"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="40dp" />
 
                 <TextView
+                    android:textAllCaps="true"
                     android:gravity="center"
                     android:text="Mark as done"
                     android:layout_width="match_parent"

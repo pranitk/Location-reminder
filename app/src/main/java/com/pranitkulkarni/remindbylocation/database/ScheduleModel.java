@@ -54,6 +54,10 @@ public class ScheduleModel {
         isNotified = notified;
     }
 
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
+    }
+
     ///
 
     public int getId() {
@@ -101,6 +105,8 @@ public class ScheduleModel {
     public Boolean getNotified() {
         return isNotified;
     }
+
+
 
 
 

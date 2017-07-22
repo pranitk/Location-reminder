@@ -176,16 +176,33 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return true;
     }
 
-    public void deleteSchedule(int id){
+    public Boolean deleteSchedule(int id,int action_type){
 
-        SQLiteDatabase database = this.getWritableDatabase();
+        try{
 
-        String query = "DELETE FROM "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE "+ DatabaseInfo.Schedules.ID + " == "+id;
+            SQLiteDatabase database = this.getWritableDatabase();
 
-        // TODO: What about messages table row ?
+            if (action_type == 1){
 
-        database.execSQL(query);
-        database.close();
+                String deleteMessage = "DELETE FROM "+ DatabaseInfo.Messages.TABLE_NAME + " WHERE "+ DatabaseInfo.Messages.SCHEDULE_ID + " == "+id;
+
+                database.execSQL(deleteMessage);
+            }
+
+            String query = "DELETE FROM "+ DatabaseInfo.Schedules.TABLE_NAME + " WHERE "+ DatabaseInfo.Schedules.ID + " == "+id;
+
+            database.execSQL(query);
+            database.close();
+
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+
+        return true;
     }
 
     public MessagesModel getMessageDetails(int id){

@@ -1,8 +1,10 @@
 package com.pranitkulkarni.remindbylocation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,10 +27,12 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
 
     private List<ScheduleModel> list;
     private Context context;
+    private Fragment fragment;
 
-    public AdapterSchedules(List<ScheduleModel> list,Context context){
+    public AdapterSchedules(List<ScheduleModel> list,Context context,Fragment fragment){
         this.list = list;
         this.context = context;
+        this.fragment = fragment;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
     }
 
     @Override
-    public void onBindViewHolder(myViewHolder holder, int position) {
+    public void onBindViewHolder(myViewHolder holder, final int position) {
 
         final ScheduleModel model = list.get(position);
         holder.placeName.setText(model.getPlace_name());
@@ -74,12 +78,17 @@ public class AdapterSchedules extends RecyclerView.Adapter<AdapterSchedules.myVi
 
                 Intent intent = new Intent(context,ViewReminder.class);
                 intent.putExtra("schedule_id",model.getId());
-                context.startActivity(intent);
+                intent.putExtra("position",position);
+                fragment.startActivityForResult(intent,1);
 
             }
         });
 
+
     }
+
+
+
 
     @Override
     public int getItemCount() {

@@ -1,10 +1,13 @@
 package com.pranitkulkarni.remindbylocation.fragments;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,10 @@ public class FragmentDashboard extends Fragment {
         // Required empty public constructor
     }
 
+    AdapterSchedules adapterSchedules;
+    List<ScheduleModel> schedules;
+    RecyclerView recyclerView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,13 +54,40 @@ public class FragmentDashboard extends Fragment {
         recyclerViewCompleted.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewCompleted.setAdapter(new AdapterSchedules(completedSchedules,getContext()));*/
 
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
-        List<ScheduleModel> schedules = new DatabaseManager(getActivity()).getAllSchedules();
+        recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        schedules = new DatabaseManager(getActivity()).getAllSchedules();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new AdapterSchedules(schedules,getContext()));
 
+        adapterSchedules = new AdapterSchedules(schedules,getContext(),this);
+        recyclerView.setAdapter(adapterSchedules);
 
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("onActivityResult"+requestCode," Req,Result code"+resultCode);
+        if (requestCode == 1){
+
+            if (resultCode == 1){   // Mark as done
+
+                schedules = new DatabaseManager(getActivity()).getAllSchedules();
+                adapterSchedules = new AdapterSchedules(schedules,getContext(),this);
+                recyclerView.setAdapter(adapterSchedules);
+
+            }
+
+            if (resultCode == 2){   // DELETE
+
+                Log.d("Position removed ",""+data.getIntExtra("position",-1));
+
+                adapterSchedules.notifyItemRemoved(data.getIntExtra("position",-1));
+                //recyclerView.setAdapter(adapterSchedules);
+
+            }
+
+        }
+    }
 }

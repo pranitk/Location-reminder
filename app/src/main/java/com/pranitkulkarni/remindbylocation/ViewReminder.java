@@ -2,6 +2,10 @@ package com.pranitkulkarni.remindbylocation;
 
 
 import java.text.SimpleDateFormat;
+
+import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +24,10 @@ import com.pranitkulkarni.remindbylocation.database.ScheduleModel;
 public class ViewReminder extends AppCompatActivity {
 
     TextView locationTv, contactTv, reminderTv, sentAtTv,createdAtTv;
-    int schedule_id = 0;
+    int schedule_id = 0,position = -1;
     ScheduleModel scheduleModel;
-    LinearLayout markAsDone;
+    LinearLayout markAsDone,repeat;
+    CoordinatorLayout coordinatorLayout;
 
 
     @Override
@@ -36,16 +41,19 @@ public class ViewReminder extends AppCompatActivity {
         setTitle("Details");
 
         schedule_id = getIntent().getIntExtra("schedule_id",0);
+        position = getIntent().getIntExtra("position",-1);
         Log.d("ID passed",""+schedule_id);
 
         scheduleModel = new DatabaseManager(ViewReminder.this).getSchedule(schedule_id);
 
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
         locationTv = (TextView)findViewById(R.id.location_text);
         contactTv = (TextView)findViewById(R.id.contact_name);
         reminderTv = (TextView)findViewById(R.id.reminder_text);
         sentAtTv = (TextView)findViewById(R.id.sent_at);
         createdAtTv = (TextView)findViewById(R.id.created_at);
         markAsDone = (LinearLayout)findViewById(R.id.mark_as_done);
+        repeat = (LinearLayout)findViewById(R.id.repeat);
 
         Log.d("ID retreived",""+scheduleModel.getId());
         locationTv.setText(scheduleModel.getPlace_name());
@@ -56,8 +64,27 @@ public class ViewReminder extends AppCompatActivity {
 
                 //TODO: Add some animation
 
-               if(new DatabaseManager(ViewReminder.this).setCompleted(schedule_id))
+               if(new DatabaseManager(ViewReminder.this).setCompleted(schedule_id)) {
+                   setResult(1);
                    finish();
+               }
+
+
+            }
+        });
+
+        findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (new DatabaseManager(ViewReminder.this).deleteSchedule(schedule_id,scheduleModel.getAction_type())) {
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("position",position);
+                    setResult(2,returnIntent);
+                    finish();
+                }
+                else
+                    Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
 
 
             }
@@ -91,8 +118,12 @@ public class ViewReminder extends AppCompatActivity {
         }
         else {
 
-            if (scheduleModel.getNotified())    // Not worked on 'COMPLETED' flag yet..
+            if (scheduleModel.getNotified()) {    // Not worked on 'COMPLETED' flag yet..
                 markAsDone.setVisibility(View.GONE);
+                repeat.setVisibility(View.VISIBLE);
+            }
+
+
 
             findViewById(R.id.contact_name_layout).setVisibility(View.GONE);
 

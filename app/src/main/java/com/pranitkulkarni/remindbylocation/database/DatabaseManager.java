@@ -134,6 +134,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
 
+
     public void updateSentAt(String sent_at,int id){
 
         Log.d("updating sent_at of "+id," "+sent_at);
@@ -144,24 +145,35 @@ public class DatabaseManager extends SQLiteOpenHelper {
         String query = "UPDATE " + DatabaseInfo.Messages.TABLE_NAME + " SET " + DatabaseInfo.Messages.SENT_AT + " = '" + sent_at +
                 "' WHERE " + DatabaseInfo.Messages.ID + " == " + id;
 
-        // TODO: Update IS_COMPLETED of Schedules table to ensure message was sent
+        String updateIsCompleted = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET "+ DatabaseInfo.Schedules.IS_COMPLETED + " = 1" +
+                " WHERE "+ DatabaseInfo.Schedules.ACTION_ID + " == "+ id;
 
         database.execSQL(query);
+        database.execSQL(updateIsCompleted);
 
         database.close();
 
     }
 
-    public void setCompleted(int id){
+    public Boolean setCompleted(int id){
 
-        SQLiteDatabase database = this.getWritableDatabase();
+        try
+        {
+            SQLiteDatabase database = this.getWritableDatabase();
 
-        String query = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET "+ DatabaseInfo.Schedules.IS_NOTIFIED + " = 1 && "+ DatabaseInfo.Schedules.IS_COMPLETED + " = 1"
-                + " WHERE "+ DatabaseInfo.Schedules.ID + " == " + id;
+            String query = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET "+ DatabaseInfo.Schedules.IS_NOTIFIED + " = 1, "+ DatabaseInfo.Schedules.IS_COMPLETED + " = 1"
+                    + " WHERE "+ DatabaseInfo.Schedules.ID + " == " + id;
 
-        database.execSQL(query);
-        database.close();
+            database.execSQL(query);
+            database.close();
 
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public void deleteSchedule(int id){
@@ -231,7 +243,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setLongitude(cursor.getDouble(cursor.getColumnIndex(DatabaseInfo.Schedules.LONGITUDE)));
                 model.setAction_type(cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.ACTION_TYPE)));
                 model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
-
+                model.setCompleted((cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_COMPLETED)) == 1));
+                model.setNotified((cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)) == 1));
 
                 if (model.getAction_type() == 1)  // sms
                 {
@@ -340,6 +353,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 model.setCreated_at(cursor.getString(cursor.getColumnIndex(DatabaseInfo.Schedules.CREATED_AT)));
                 model.setCompleted((cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_COMPLETED)) == 1));
                 model.setNotified(isNotified);
+
+                Log.d("Reminder "+model.getLabel()," Notified -> "+cursor.getInt(cursor.getColumnIndex(DatabaseInfo.Schedules.IS_NOTIFIED)));
 
                 if (model.getAction_type() == 1)  // sms
                 {

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pranitkulkarni.remindbylocation.database.DatabaseManager;
@@ -21,6 +22,7 @@ public class ViewReminder extends AppCompatActivity {
     TextView locationTv, contactTv, reminderTv, sentAtTv,createdAtTv;
     int schedule_id = 0;
     ScheduleModel scheduleModel;
+    LinearLayout markAsDone;
 
 
     @Override
@@ -43,15 +45,32 @@ public class ViewReminder extends AppCompatActivity {
         reminderTv = (TextView)findViewById(R.id.reminder_text);
         sentAtTv = (TextView)findViewById(R.id.sent_at);
         createdAtTv = (TextView)findViewById(R.id.created_at);
+        markAsDone = (LinearLayout)findViewById(R.id.mark_as_done);
 
         Log.d("ID retreived",""+scheduleModel.getId());
         locationTv.setText(scheduleModel.getPlace_name());
 
+        markAsDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TODO: Add some animation
+
+               if(new DatabaseManager(ViewReminder.this).setCompleted(schedule_id))
+                   finish();
+
+
+            }
+        });
+
         SimpleDateFormat systemDateFormat = new SimpleDateFormat(getString(R.string.system_date_format));
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm a");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM");
 
         if (scheduleModel.getAction_type() == 1){   // SMS reminder...
+
+            if (scheduleModel.getCompleted())
+                markAsDone.setVisibility(View.GONE);
 
             MessagesModel messageModel = scheduleModel.getMessagesModel();
             contactTv.setText(messageModel.getContact_name());
@@ -71,6 +90,9 @@ public class ViewReminder extends AppCompatActivity {
 
         }
         else {
+
+            if (scheduleModel.getNotified())    // Not worked on 'COMPLETED' flag yet..
+                markAsDone.setVisibility(View.GONE);
 
             findViewById(R.id.contact_name_layout).setVisibility(View.GONE);
 
@@ -97,6 +119,9 @@ public class ViewReminder extends AppCompatActivity {
 
 
         }
+
+
+
 
         try{
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_200"
-    tools:context="com.pranitkulkarni.remindbylocation.fragments.FragmentDashboard">
+    tools:context="com.pranitkulkarni.remindbylocation.fragments.FragmentSchedules">
 
     <!--
     <android.support.v4.widget.NestedScrollView

@@ -135,6 +135,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 
 
+
     public void updateSentAt(String sent_at,int id){
 
         Log.d("updating sent_at of "+id," "+sent_at);
@@ -155,13 +156,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
-    public Boolean setCompleted(int id){
+    public Boolean updateCompleted(int id,int value){
 
         try
         {
             SQLiteDatabase database = this.getWritableDatabase();
 
-            String query = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET "+ DatabaseInfo.Schedules.IS_NOTIFIED + " = 1, "+ DatabaseInfo.Schedules.IS_COMPLETED + " = 1"
+            String query = "UPDATE "+ DatabaseInfo.Schedules.TABLE_NAME + " SET "+ DatabaseInfo.Schedules.IS_NOTIFIED + " = "+value+", "+ DatabaseInfo.Schedules.IS_COMPLETED + " = " + value
                     + " WHERE "+ DatabaseInfo.Schedules.ID + " == " + id;
 
             database.execSQL(query);

@@ -40,7 +40,7 @@ public class LocationTracker extends Service {
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 5f;
     SharedPreferences sharedPreferences;
-    int random_number=0;
+    //int random_number=0;    // Use for unique notification id
 
     @Nullable
     @Override
@@ -67,20 +67,8 @@ public class LocationTracker extends Service {
             Log.d(TAG,"Longitude - "+location.getLongitude());
             myLastLocation.set(location);
 
-            //String lat = sharedPreferences.getString("latitude","");
-            //String longt = sharedPreferences.getString("longitude","");
-
             try{
 
-                /*Double latitudeToBeSearched = Double.parseDouble(lat);
-                Double longitudeToBeSearched = Double.parseDouble(longt);
-
-
-                Location locationToBeSearched = new Location("temp");
-                locationToBeSearched.setLongitude(longitudeToBeSearched);
-                locationToBeSearched.setLatitude(latitudeToBeSearched);
-
-                Float distance = myLastLocation.distanceTo(locationToBeSearched);*/
 
                 List<ScheduleModel> reminders = new DatabaseManager(getApplicationContext()).getLocationsToBeSearched(location);
 
@@ -93,7 +81,9 @@ public class LocationTracker extends Service {
 
                         ScheduleModel reminder = reminders.get(i);
 
-                        Intent openApp = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent openApp = new Intent(getApplicationContext(), ViewReminder.class);
+                        openApp.putExtra("schedule_id",reminder.getId());
+                        openApp.putExtra("position",i);
                         openApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,openApp,PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -119,7 +109,8 @@ public class LocationTracker extends Service {
                                     .build();
 
 
-                            notificationManager.notify(random_number,notification);
+                            //notificationManager.notify(random_number,notification);
+                            notificationManager.notify(reminder.getId(),notification);
 
 
                             databaseManager.setNotified(reminder.getId());
@@ -128,6 +119,7 @@ public class LocationTracker extends Service {
 
                         }
                         else {
+
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                             Notification notification = builder.setContentTitle(reminder.getLabel())
@@ -140,7 +132,8 @@ public class LocationTracker extends Service {
                                     .build();
 
 
-                            notificationManager.notify(random_number,notification);
+                            //notificationManager.notify(random_number,notification);
+                            notificationManager.notify(reminder.getId(),notification);
 
                             new DatabaseManager(getApplicationContext()).setNotified(reminder.getId());
 
@@ -191,7 +184,7 @@ public class LocationTracker extends Service {
 
         initializeLocationManager();
 
-        random_number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        //random_number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 
         try {
 

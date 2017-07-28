@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="60e3985f1694ce782a3c30714bc7784dc682c712" />
 
         <receiver android:name=".BootCompletedReceiver">
             <intent-filter>
@@ -43,7 +48,7 @@
 
         <activity android:name=".AddMessageReminder" />
         <activity android:name=".AddTextReminder" />
-        <activity android:name=".ViewReminder"></activity>
+        <activity android:name=".ViewReminder"/>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.pranitkulkarni.remindbylocation;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +27,7 @@ public class AddTextReminder extends AppCompatActivity {
     Double latitude,longitude;
     String place_name="";
     TextView locationTv,contentTv;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class AddTextReminder extends AppCompatActivity {
         setTitle("Add");
         locationTv = (TextView)findViewById(R.id.location_text);
         contentTv = (TextView)findViewById(R.id.text);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
 
         findViewById(R.id.select_location).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +68,7 @@ public class AddTextReminder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (latitude != null || !contentTv.getText().toString().isEmpty()){
+                if (latitude != null && !contentTv.getText().toString().isEmpty()){
 
                     ScheduleModel model = new ScheduleModel();
                     model.setLatitude(latitude);
@@ -78,6 +82,16 @@ public class AddTextReminder extends AppCompatActivity {
 
                     if (databaseManager.addSchedule(model))
                         finish();
+                    else
+                        Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
+
+                }
+                else {
+
+                    if (latitude == null)
+                        Snackbar.make(coordinatorLayout,"Select location to proceed",Snackbar.LENGTH_LONG).show();
+                    else
+                        Snackbar.make(coordinatorLayout,"Enter your reminder",Snackbar.LENGTH_LONG).show();
 
                 }
 

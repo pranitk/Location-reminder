@@ -1,11 +1,13 @@
 package com.pranitkulkarni.remindbylocation;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -92,34 +94,48 @@ public class AddMessageReminder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 if (isValidated()){
 
-                    DatabaseManager databaseManager = new DatabaseManager(AddMessageReminder.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AddMessageReminder.this);
+                    builder.setTitle("Save ?");
+                    builder.setMessage("Note that you will be charged for the SMS as per your plan by the network provider.");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    ScheduleModel model = new ScheduleModel();
-                    model.setLatitude(latitude);
-                    model.setLongitude(longitude);
-                    model.setPlace_name(place_name);
-                    model.setCreated_at(""+ Calendar.getInstance().getTime());
-                    model.setAction_type(1);
+                            DatabaseManager databaseManager = new DatabaseManager(AddMessageReminder.this);
+
+                            ScheduleModel model = new ScheduleModel();
+                            model.setLatitude(latitude);
+                            model.setLongitude(longitude);
+                            model.setPlace_name(place_name);
+                            model.setCreated_at(""+ Calendar.getInstance().getTime());
+                            model.setAction_type(1);
 
 
-                    MessagesModel messagesModel = new MessagesModel();
-                    messagesModel.setMessage(messageEt.getText().toString());
-                    messagesModel.setContact_number(phoneEt.getText().toString());
+                            MessagesModel messagesModel = new MessagesModel();
+                            messagesModel.setMessage(messageEt.getText().toString());
+                            messagesModel.setContact_number(phoneEt.getText().toString());
 
-                    if (contact_name.isEmpty())
-                        messagesModel.setContact_name(phoneEt.getText().toString());
-                    else
-                        messagesModel.setContact_name(contact_name);
+                            if (contact_name.isEmpty())
+                                messagesModel.setContact_name(phoneEt.getText().toString());
+                            else
+                                messagesModel.setContact_name(contact_name);
 
-                    model.setMessagesModel(messagesModel);
-                    model.setLabel("Send SMS to "+messagesModel.getContact_name());
+                            model.setMessagesModel(messagesModel);
+                            model.setLabel("Send SMS to "+messagesModel.getContact_name());
 
-                    if (databaseManager.addSchedule(model))
-                        finish();
-                    else
-                        Log.d("Add schedule","Something went wrong!");
+                            if (databaseManager.addSchedule(model))
+                                finish();
+                            else
+                                Log.d("Add schedule","Something went wrong!");
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel",null);
+                    builder.show();
+
 
                 }
 

@@ -13,10 +13,13 @@
     <string name="text_reminder_note">Remind to do something. E.g. Buy frappe, call Chandler, meet Joe</string>
 
 
-    <string name="about_developer">Made by Pranit Kulkarni</string>
+    <string name="about_developer">Made by <b>Pranit Kulkarni</b></string>
     <string name="rate_on_playstore">Rate on Playstore</string>
     <string name="contact_developer">Contact developer / Give feedback</string>
 
     <string name="system_date_format">EEE MMM d HH:mm:ss z yyyy</string>
+
+    <string name="location_permission_note">Please note that the app needs location permission to work.\n\nSelect <b>ALLOW</b> in the next step to proceed.</string>
+    <string name="sms_permission_note">Please note that the SMS reminder feature needs the SMS permission. If you deny it the feature won\'t work. \n\nSelect <b>ALLOW</b> in the next step to proceed.</string>
 
 </resources>

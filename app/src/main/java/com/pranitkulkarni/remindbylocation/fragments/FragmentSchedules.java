@@ -24,10 +24,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentDashboard extends Fragment {
+public class FragmentSchedules extends Fragment {
 
 
-    public FragmentDashboard() {
+    public FragmentSchedules() {
         // Required empty public constructor
     }
 

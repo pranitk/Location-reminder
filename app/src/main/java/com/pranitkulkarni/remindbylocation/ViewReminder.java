@@ -3,10 +3,13 @@ package com.pranitkulkarni.remindbylocation;
 
 import java.text.SimpleDateFormat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pranitkulkarni.remindbylocation.database.DatabaseManager;
 import com.pranitkulkarni.remindbylocation.database.MessagesModel;
@@ -64,10 +68,13 @@ public class ViewReminder extends AppCompatActivity {
 
                 //TODO: Add some animation
 
-               if(new DatabaseManager(ViewReminder.this).setCompleted(schedule_id)) {
+               if(new DatabaseManager(ViewReminder.this).updateCompleted(schedule_id,1)) {
+                   Toast.makeText(ViewReminder.this,"Marked as done!",Toast.LENGTH_LONG).show();
                    setResult(1);
                    finish();
                }
+               else
+                Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
 
 
             }
@@ -77,15 +84,47 @@ public class ViewReminder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (new DatabaseManager(ViewReminder.this).deleteSchedule(schedule_id,scheduleModel.getAction_type())) {
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("position",position);
-                    setResult(2,returnIntent);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(ViewReminder.this);
+                dialog.setTitle("Are you sure to delete the reminder ?");
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (new DatabaseManager(ViewReminder.this).deleteSchedule(schedule_id,scheduleModel.getAction_type())) {
+                            Toast.makeText(ViewReminder.this,"Reminder deleted",Toast.LENGTH_LONG).show();
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("position",position);
+                            setResult(2,returnIntent);
+                            finish();
+                        }
+                        else
+                            Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
+
+
+                    }
+                });
+
+                dialog.setNegativeButton("No",null);
+                dialog.show();
+
+
+
+            }
+        });
+
+
+        repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(new DatabaseManager(ViewReminder.this).updateCompleted(schedule_id,0)) {
+
+                    Toast.makeText(ViewReminder.this,"Done! You will be reminded next time you are near "+scheduleModel.getPlace_name(),Toast.LENGTH_LONG).show();
+                    setResult(1);
                     finish();
                 }
                 else
                     Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
-
 
             }
         });
@@ -98,6 +137,10 @@ public class ViewReminder extends AppCompatActivity {
 
             if (scheduleModel.getCompleted())
                 markAsDone.setVisibility(View.GONE);
+            else if (!scheduleModel.getNotified())
+                sentAtTv.setText("Yet to be sent");
+            else
+                sentAtTv.setText("SMS sending failed. Check your messages app.");
 
             MessagesModel messageModel = scheduleModel.getMessagesModel();
             contactTv.setText(messageModel.getContact_name());
@@ -121,9 +164,8 @@ public class ViewReminder extends AppCompatActivity {
             if (scheduleModel.getNotified()) {    // Not worked on 'COMPLETED' flag yet..
                 markAsDone.setVisibility(View.GONE);
                 repeat.setVisibility(View.VISIBLE);
+
             }
-
-
 
             findViewById(R.id.contact_name_layout).setVisibility(View.GONE);
 
@@ -132,11 +174,14 @@ public class ViewReminder extends AppCompatActivity {
 
             reminderTv.setText(scheduleModel.getLabel());
 
-            ImageView notificationIcon = (ImageView)findViewById(R.id.notified_icon);
+            findViewById(R.id.sent_at_layout).setVisibility(View.GONE);
+
+            /*ImageView notificationIcon = (ImageView)findViewById(R.id.notified_icon);
             notificationIcon.setImageDrawable(ContextCompat.getDrawable(ViewReminder.this, R.drawable.ic_notifications_dark));
 
             // TODO: Add NOTIFIED_AT column ..
-            sentAtTv.setText("Notified at ");
+            sentAtTv.setText("Notified at ");*/
+
             /*try{
 
                 String time = timeFormat.format(systemDateFormat.parse());
@@ -164,6 +209,21 @@ public class ViewReminder extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        findViewById(R.id.location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String coordinates = "geo:"+scheduleModel.getLatitude()+","+scheduleModel.getLongitude();
+                Uri gmmIntentUri = Uri.parse(coordinates);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+
+            }
+        });
 
     }
 

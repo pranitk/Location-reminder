@@ -51,7 +51,7 @@ public class FragmentSettings extends Fragment {
             @Override
             public void onClick(View v) {
 
-                // TODO:
+                startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://play.google.com/store/apps/details?id=com.pranitkulkarni.remindbylocation&hl=en")));
 
             }
         });

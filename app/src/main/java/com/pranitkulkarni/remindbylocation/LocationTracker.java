@@ -85,7 +85,7 @@ public class LocationTracker extends Service {
                         openApp.putExtra("schedule_id",reminder.getId());
                         openApp.putExtra("position",i);
                         openApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,openApp,PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),reminder.getId(),openApp,PendingIntent.FLAG_ONE_SHOT);
 
                         if (reminder.getAction_type() == 1) // Send SMS
                         {

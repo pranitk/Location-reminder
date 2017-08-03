@@ -56,10 +56,18 @@ public class FragmentSchedules extends Fragment {
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
         schedules = new DatabaseManager(getActivity()).getAllSchedules();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapterSchedules = new AdapterSchedules(schedules,getContext(),this);
-        recyclerView.setAdapter(adapterSchedules);
+        if (schedules.size() > 0){
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            adapterSchedules = new AdapterSchedules(schedules,getContext(),this);
+            recyclerView.setAdapter(adapterSchedules);
+
+        }else
+            view.findViewById(R.id.no_reminders_layout).setVisibility(View.VISIBLE);
+
+
 
         return view;
     }

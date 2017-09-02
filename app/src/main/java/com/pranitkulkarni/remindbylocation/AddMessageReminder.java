@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.AddToCartEvent;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -75,12 +78,17 @@ public class AddMessageReminder extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                Answers.getInstance().logCustom(new CustomEvent("Select location"));
+                //Answers.getInstance().logAddToCart(new AddToCartEvent().putItemName("Search location").putItemType("Add reminder"));
+
             }
         });
 
         findViewById(R.id.select_contact).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Answers.getInstance().logCustom(new CustomEvent("Select contact"));
 
                 Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
@@ -126,8 +134,12 @@ public class AddMessageReminder extends AppCompatActivity {
                             model.setMessagesModel(messagesModel);
                             model.setLabel("Send SMS to "+messagesModel.getContact_name());
 
-                            if (databaseManager.addSchedule(model))
+                            if (databaseManager.addSchedule(model)) {
+
+                                Answers.getInstance().logCustom(new CustomEvent("Add SMS reminder"));
+                                //Answers.getInstance().logAddToCart(new AddToCartEvent().putItemName("Message reminder").putItemType("Add reminder"));
                                 finish();
+                            }
                             else
                                 Log.d("Add schedule","Something went wrong!");
                         }

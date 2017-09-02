@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.AddToCartEvent;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -60,6 +63,10 @@ public class AddTextReminder extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+
+                Answers.getInstance().logCustom(new CustomEvent("Select location"));
+                //Answers.getInstance().logAddToCart(new AddToCartEvent().putItemName("Search location").putItemType("Add reminder"));
+
             }
         });
 
@@ -80,8 +87,12 @@ public class AddTextReminder extends AppCompatActivity {
 
                     DatabaseManager databaseManager = new DatabaseManager(AddTextReminder.this);
 
-                    if (databaseManager.addSchedule(model))
+                    if (databaseManager.addSchedule(model)) {
+
+                        Answers.getInstance().logCustom(new CustomEvent("Add TEXT reminder"));
+                        //Answers.getInstance().logAddToCart( new AddToCartEvent().putItemName("Text reminder").putItemType("Add reminder"));
                         finish();
+                    }
                     else
                         Snackbar.make(coordinatorLayout,"Something went wrong! Please try again",Snackbar.LENGTH_LONG).show();
 

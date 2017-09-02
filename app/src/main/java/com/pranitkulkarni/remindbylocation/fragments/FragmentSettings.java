@@ -38,7 +38,7 @@ public class FragmentSettings extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setType("text/plain");
                 intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                intent.putExtra(Intent.EXTRA_EMAIL,"pranitkulkarni24@gmail.com");
+                intent.putExtra(Intent.EXTRA_EMAIL,new String[]{"pranitkulkarni24@gmail.com"});
                 intent.putExtra(Intent.EXTRA_SUBJECT,"Feedback");
                 if (intent.resolveActivity(getActivity().getPackageManager()) != null)
                     startActivity(intent);
